@@ -1,0 +1,317 @@
+Q.1. Delete the elements in a linked list whose sum is equal to zero
+
+class Node {
+    constructor(value) {
+        this.value = value;
+        this.next = null;
+    }
+}
+
+function removeZeroSumSublists(head) {
+    let dummy = new Node(0);
+    dummy.next = head;
+    let sumMap = new Map();
+    let sum = 0;
+    let current = dummy;
+
+    while (current) {
+        sum += current.value;
+        if (sumMap.has(sum)) {
+            let prev = sumMap.get(sum).next;
+            let tempSum = sum + prev.value;
+
+            while (tempSum !== sum) {
+                sumMap.delete(tempSum);
+                prev = prev.next;
+                tempSum += prev.value;
+            }
+
+            sumMap.get(sum).next = current.next;
+        } else {
+            sumMap.set(sum, current);
+        }
+        current = current.next;
+    }
+
+    return dummy.next;
+}
+
+// Example usage:
+let head = new Node(1);
+head.next = new Node(2);
+head.next.next = new Node(-3);
+head.next.next.next = new Node(3);
+head.next.next.next.next = new Node(1);
+
+let result = removeZeroSumSublists(head);
+while (result) {
+    console.log(result.value);
+    result = result.next;
+}
+
+
+
+Q.2. Reverse a linked list in groups of given size
+class Node {
+    constructor(value) {
+        this.value = value;
+        this.next = null;
+    }
+}
+
+function reverseInGroups(head, k) {
+    if (!head) return null;
+
+    let current = head;
+    let next = null;
+    let prev = null;
+    let count = 0;
+
+    while (current && count < k) {
+        next = current.next;
+        current.next = prev;
+        prev = current;
+        current = next;
+        count++;
+    }
+
+    if (next) {
+        head.next = reverseInGroups(next, k);
+    }
+
+    return prev;
+}
+
+// Example usage:
+let head = new Node(1);
+head.next = new Node(2);
+head.next.next = new Node(3);
+head.next.next.next = new Node(4);
+head.next.next.next.next = new Node(5);
+
+let result = reverseInGroups(head, 2);
+while (result) {
+    console.log(result.value);
+    result = result.next;
+}
+
+
+Q.3. Merge a linked list into another linked list at alternate positions
+class Node {
+    constructor(value) {
+        this.value = value;
+        this.next = null;
+    }
+}
+
+function mergeAlternate(l1, l2) {
+    let head1 = l1;
+    let head2 = l2;
+
+    while (head1 && head2) {
+        let temp1 = head1.next;
+        let temp2 = head2.next;
+
+        head1.next = head2;
+        if (temp1) {
+            head2.next = temp1;
+        }
+        head1 = temp1;
+        head2 = temp2;
+    }
+
+    return l1;
+}
+
+// Example usage:
+let l1 = new Node(1);
+l1.next = new Node(2);
+l1.next.next = new Node(3);
+
+let l2 = new Node(4);
+l2.next = new Node(5);
+l2.next.next = new Node(6);
+
+let result = mergeAlternate(l1, l2);
+while (result) {
+    console.log(result.value);
+    result = result.next;
+}
+
+
+
+Q.4. In an array, count pairs with a given sum
+function countPairs(arr, sum) {
+    let count = 0;
+    let map = new Map();
+
+    for (let num of arr) {
+        const complement = sum - num;
+        if (map.has(complement)) {
+            count += map.get(complement);
+        }
+        map.set(num, (map.get(num) || 0) + 1);
+    }
+
+    return count;
+}
+
+// Example usage:
+const arr4 = [1, 5, 7, -1, 5];
+const sum4 = 6;
+console.log(countPairs(arr4, sum4));
+
+
+Q.5. Find duplicates in an array
+function findDuplicates(arr) {
+    let seen = new Set();
+    let duplicates = new Set();
+
+    for (let num of arr) {
+        if (seen.has(num)) {
+            duplicates.add(num);
+        } else {
+            seen.add(num);
+        }
+    }
+
+    return Array.from(duplicates);
+}
+
+// Example usage:
+const arr5 = [1, 2, 3, 1, 3, 6, 6];
+console.log(findDuplicates(arr5));
+
+
+Q.6. Find the Kth largest and Kth smallest number in an array
+function kthLargest(arr, k) {
+    arr.sort((a, b) => b - a);
+    return arr[k - 1];
+}
+
+function kthSmallest(arr, k) {
+    arr.sort((a, b) => a - b);
+    return arr[k - 1];
+}
+
+// Example usage:
+const arr6 = [7, 10, 4, 3, 20, 15];
+const k = 3;
+console.log(kthLargest(arr6, k));
+console.log(kthSmallest(arr6, k));
+
+
+Q.7. Move all the negative elements to one side of the array
+function moveNegatives(arr) {
+    let left = 0;
+    let right = arr.length - 1;
+
+    while (left <= right) {
+        if (arr[left] < 0 && arr[right] < 0) {
+            left++;
+        } else if (arr[left] > 0 && arr[right] < 0) {
+            [arr[left], arr[right]] = [arr[right], arr[left]];
+            left++;
+            right--;
+        } else if (arr[left] > 0 && arr[right] > 0) {
+            right--;
+        } else {
+            left++;
+            right--;
+        }
+    }
+    return arr;
+}
+
+// Example usage:
+const arr7 = [-1, 2, -3, 4, -5, 6];
+console.log(moveNegatives(arr7));
+
+
+
+Q.8. Reverse a string using a stack data structure
+function reverseString(str) {
+    let stack = [];
+    for (let char of str) {
+        stack.push(char);
+    }
+
+    let reversedStr = '';
+    while (stack.length > 0) {
+        reversedStr += stack.pop();
+    }
+
+    return reversedStr;
+}
+
+// Example usage:
+const str8 = "hello";
+console.log(reverseString(str8));
+
+
+
+Q.9. Evaluate a postfix expression using a stack
+function evaluatePostfix(expression) {
+    let stack = [];
+    
+    for (let char of expression) {
+        if (!isNaN(char)) {
+            stack.push(Number(char));
+        } else {
+            let b = stack.pop();
+            let a = stack.pop();
+            
+            switch (char) {
+                case '+': stack.push(a + b); break;
+                case '-': stack.push(a - b); break;
+                case '*': stack.push(a * b); break;
+                case '/': stack.push(a / b); break;
+            }
+        }
+    }
+
+    return stack.pop();
+}
+
+// Example usage:
+const postfixExpr = "231*+9-";
+console.log(evaluatePostfix(postfixExpr));
+
+
+
+Q.10. Implement a queue using the stack data structure
+class Queue {
+    constructor() {
+        this.stack1 = [];
+        this.stack2 = [];
+    }
+
+    enqueue(value) {
+        this.stack1.push(value);
+    }
+
+    dequeue() {
+        if (this.stack2.length === 0) {
+            while (this.stack1.length > 0) {
+                this.stack2.push(this.stack1.pop());
+            }
+        }
+
+        if (this.stack2.length === 0) {
+            return "Queue is empty";
+        }
+
+        return this.stack2.pop();
+    }
+}
+
+// Example usage:
+const queue = new Queue();
+queue.enqueue(1);
+queue.enqueue(2);
+queue.enqueue(3);
+console.log(queue.dequeue()); // 1
+console.log(queue.dequeue()); // 2
+queue.enqueue(4);
+console.log(queue.dequeue()); // 3
+console.log(queue.dequeue()); // 4
